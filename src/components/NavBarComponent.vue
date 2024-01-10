@@ -1,3 +1,4 @@
+<!-- NavBarComponent.vue -->
 <template>
   <div id="app">
     <nav
@@ -5,7 +6,7 @@
       style="background-color: rgb(64, 133, 88)"
     >
       <div class="container">
-        <a class="navbar-brand text-white" href="">Capteurs temperatures</a>
+        <a class="navbar-brand text-white" href="#">Capteurs temperatures</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -20,23 +21,15 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <!-- <a class="nav-link text-white" href="s">Live</a> -->
               <button
                 class="nav-link btn text-white"
                 @click="switchToHistorique"
-                :class="{ active: historiqueDisplay }"
               >
                 Historique
               </button>
             </li>
             <li class="nav-item">
-              <!-- <a class="nav-link text-white" href="views/Historique.vue"
-                >Historique</a -->
-              <button
-                class="nav-link btn text-white"
-                @click="switchToLive"
-                :class="{ active: !historiqueDisplay }"
-              >
+              <button class="nav-link btn text-white" @click="switchToLive">
                 Live
               </button>
             </li>

@@ -47,7 +47,44 @@
 <script>
 export default {
   props: {
-    sensorData: Array,
+    sensorNames: Array,
+  },
+  data() {
+    return {
+      newSensorName: "",
+      selectedSensor: null,
+    };
+  },
+  methods: {
+    openModal(sensor) {
+      this.selectedSensor = sensor;
+      this.newSensorName = sensor.nom_capteur || sensor.capteur;
+
+      this.$("#modalModifNames").modal("show");
+    },
+    saveModifiedName() {
+      if (this.selectedSensor) {
+        this.$emit("updateSensorName", {
+          capteur: this.selectedSensor.capteur,
+          name: this.newSensorName,
+        });
+        this.closeModal();
+      }
+    },
+    closeModal() {
+      this.newSensorName = "";
+      this.selectedSensor = null;
+
+      this.$("#modalModifNames").modal("hide");
+    },
+  },
+};
+</script>
+
+<!-- 
+<script>
+export default {
+  props: {
     sensorNames: Array,
   },
   data() {
@@ -89,4 +126,4 @@ export default {
     this.modalId();
   },
 };
-</script>
+</script> -->

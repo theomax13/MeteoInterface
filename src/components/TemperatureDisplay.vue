@@ -1,7 +1,7 @@
 <!-- TemperatureDisplay.vue -->
 <template>
   <div class="temperature-display d-flex flex-wrap justify-content-center">
-    <div class="form-check form-check-inline">
+    <div class="form-check form-check-inline" v-if="sensorData">
       <input
         class="form-check-input"
         type="radio"
@@ -13,7 +13,7 @@
       />
       <label class="form-check-label" for="flexRadioDefault1"> Tableau </label>
     </div>
-    <div class="form-check form-check-inline">
+    <div class="form-check form-check-inline" v-if="sensorData">
       <input
         class="form-check-input"
         type="radio"
@@ -28,6 +28,7 @@
       class="form-select m-3"
       aria-label="selectTaille"
       v-model="tailleHistorique"
+      v-if="sensorData"
     >
       <option value="">All</option>
       <option value="10">10</option>
@@ -40,6 +41,7 @@
       class="form-select m-3"
       aria-label="selectCapteur"
       v-model="selectCaptor"
+      v-if="sensorData"
     >
       <option value="">All</option>
       <option v-for="names in sensorNames" :key="names.capteur">
@@ -48,15 +50,18 @@
       </option>
     </select>
 
-    <CardComponent v-if="switchButton === 'card'" :sensorData="filteredData" />
+    <!-- <CardComponent
+      v-if="switchButton === 'card' || liveSensorData"
+      :liveSensorData="liveSensorData"
+    /> -->
+    <!-- :sensorData="filteredData" -->
 
     <TableComponent
-      v-if="switchButton === 'table'"
+      v-if="switchButton === 'table' && sensorData"
       :sensorData="filteredData"
     />
 
-    <Moda
-      :sensorData="sensorData"
+    <ModalComponent
       :sensorNames="sensorNames"
       @updateSensorName="updateSensorName"
     />
@@ -64,19 +69,20 @@
 </template>
 
 <script>
-import CardComponent from "@/components/CardComponent.vue";
+// import CardComponent from "@/components/CardComponent.vue";
 import TableComponent from "./TableComponent.vue";
-import Moda from "./ModalComponent.vue";
+import ModalComponent from "./ModalComponent.vue";
 
 export default {
   props: {
     sensorData: Array,
     sensorNames: Array,
+    liveSensorData: Array,
   },
+  // CardComponent,
   components: {
-    CardComponent,
     TableComponent,
-    Moda,
+    ModalComponent,
   },
   data() {
     return {

@@ -3,12 +3,18 @@
   <div id="app">
     <NavBarComponent @switchDisplay="switchDisplay" />
     <TemperatureDisplay
-      v-if="(historiqueDisplay = true)"
+      v-if="historiqueDisplay"
       :sensorData="sensorData"
       :sensorNames="sensorNames"
-      @updateSensorName="updateSensorName"
     />
-    <LiveDisplay v-else :liveSensorData="liveSensorData" />
+    <KeepAlive v-else>
+      <LiveDisplay
+        :liveSensorData="liveSensorData"
+        :sensorData="sensorData"
+        :sensorNames="sensorNames"
+        @updateSensorName="updateSensorName"
+      />
+    </KeepAlive>
   </div>
 </template>
 
@@ -23,10 +29,10 @@ export default {
   name: "App",
   data() {
     return {
+      historiqueDisplay: false,
       sensorData: [],
       sensorNames: [],
       liveSensorData: [],
-      historiqueDisplay: false,
     };
   },
   components: {
@@ -41,22 +47,21 @@ export default {
     async fetchSensorData() {
       try {
         const response = await axios.get("https://api-meteo.ykpf.net");
-        // const responseLive = await axios.get("https://api-meteo.ykpf.net/live");
+        const responseLive = await axios.get("https://api-meteo.ykpf.net/live");
         const responseNames = await axios.get(
           "https://api-meteo.ykpf.net/capteurs"
         );
         this.sensorData = Object.values(response.data);
-        // this.liveSensorData = Object.values(responseLive.data);
+        this.liveSensorData = Object.values(responseLive.data);
         this.sensorNames = Object.values(responseNames.data);
         this.sensorData.pop();
-        // this.liveSensorData.pop();
+        this.liveSensorData.pop();
         this.sensorNames.pop();
       } catch (error) {
         console.error("Error fetching sensor data:", error);
       }
     },
     async updateSensorName(capteur) {
-      console.log(capteur);
       const url = `https://api-meteo.ykpf.net/capteur/${capteur.capteur}`;
       const data = {
         nom: capteur.name,

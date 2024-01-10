@@ -1,56 +1,62 @@
 <template>
   <div id="chart">
-    <apexcharts v-if="ready" type="line" height="350" :options="chartOptions" :series="series"></apexcharts>
+    <apexcharts
+      v-if="ready"
+      type="line"
+      height="350"
+      :options="chartOptions"
+      :series="series"
+    ></apexcharts>
   </div>
 </template>
 
 <script>
-import VueApexCharts from 'vue3-apexcharts';
+import VueApexCharts from "vue3-apexcharts";
 
 export default {
   props: {
     sensorData: Array,
   },
-  name: 'ChartComponent',
+  name: "ChartComponent",
   components: {
     apexcharts: VueApexCharts,
   },
-  data: function() {
+  data: function () {
     return {
       ready: false,
       series: [],
       chartOptions: {
         chart: {
           height: 350,
-          type: 'line',
+          type: "line",
           dropShadow: {
             enabled: true,
-            color: '#000',
+            color: "#000",
             top: 18,
             left: 7,
             blur: 10,
-            opacity: 0.2
+            opacity: 0.2,
           },
           toolbar: {
-            show: false
-          }
+            show: false,
+          },
         },
-        colors: ['#77B6EA', '#545454'],
+        colors: ["#77B6EA", "#545454"],
         dataLabels: {
           enabled: false,
         },
         stroke: {
-          curve: 'smooth'
+          curve: "smooth",
         },
         title: {
-          text: 'Températures par capteurs',
-          align: 'left'
+          text: "Températures par capteurs",
+          align: "left",
         },
         grid: {
-          borderColor: '#e7e7e7',
+          borderColor: "#e7e7e7",
           row: {
-            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-            opacity: 0.5
+            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+            opacity: 0.5,
           },
         },
         markers: {
@@ -59,25 +65,25 @@ export default {
         xaxis: {
           categories: [],
           title: {
-            text: 'Date'
-          }
+            text: "Date",
+          },
         },
         yaxis: {
           title: {
-            text: 'Temperature'
+            text: "Temperature",
           },
           min: 0,
-          max: 0
+          max: 0,
         },
         legend: {
-          position: 'top',
-          horizontalAlign: 'right',
+          position: "top",
+          horizontalAlign: "right",
           floating: true,
           offsetY: -25,
-          offsetX: -5
-        }
+          offsetX: -5,
+        },
       },
-    }
+    };
   },
   watch: {
     sensorData(newData) {
@@ -91,8 +97,7 @@ export default {
         if (sensor.id === undefined) continue;
         processedSensorData.set(sensor.capteur, []);
 
-        if (!dates.includes(sensor.received_at))
-          dates.push((sensor.received_at));
+        if (!dates.includes(sensor.received_at)) dates.push(sensor.received_at);
 
         minTemp = Math.min(minTemp, sensor.temperature_relevee);
         maxTemp = Math.max(maxTemp, sensor.temperature_relevee);
@@ -119,8 +124,10 @@ export default {
         }
       }
 
-      let aled = Array.from(processedSensorData, ([name, data]) => ({ name, data }));
-      console.log(aled);
+      let aled = Array.from(processedSensorData, ([name, data]) => ({
+        name,
+        data,
+      }));
 
       this.series = aled;
       this.chartOptions.xaxis.categories = dates;
@@ -128,13 +135,10 @@ export default {
       this.chartOptions.yaxis.max = maxTemp + 5;
       this.chartOptions.markers.size = Array(aled.length).fill(0);
 
-      console.log(minTemp, maxTemp);
       this.ready = true;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
